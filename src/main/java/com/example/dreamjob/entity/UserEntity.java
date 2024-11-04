@@ -33,7 +33,7 @@ public class UserEntity {
     String fullName;
     @Column(nullable = true, length = 15)
     int phone;
-    @Column(name = "file_cv",nullable = true)
+    @Column(name = "file_cv",columnDefinition = "nvarchar(255)",nullable = true)
     String cv;
     @Column(name = "user_experience",columnDefinition = "nvarchar(255)",nullable = true)
     String experience;
@@ -41,12 +41,14 @@ public class UserEntity {
     String location;
     @Column(name= "desired_job",columnDefinition = "nvarchar(255)", nullable = true)
     String desiredJob;
-
-
     @Column(name="roles", nullable = true)
     Long roles;
     @Column(name="avatar", nullable = true)
     String avatar;
+
+    @ManyToOne
+    @JoinColumn(name = "message_id",nullable = true) // tên cột khóa ngoại
+    private MessageEntity message; // trường này phải tồn tại
 
     @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
@@ -55,5 +57,6 @@ public class UserEntity {
     @JsonManagedReference
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private CompanyEntity company;
+
 
 }

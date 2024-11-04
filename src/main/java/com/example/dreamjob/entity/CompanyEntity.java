@@ -19,14 +19,6 @@ public class CompanyEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "company_id")
     private Long companyId;
-
-    @JsonBackReference
-    @OneToOne
-    @JoinColumn(name = "user_Id", nullable = true) // Tạo cột khóa ngoại user_id trong bảng Company
-    private UserEntity user;
-
-
-
     @Column(name = "company_Name", columnDefinition = "nvarchar(255)", nullable = true)
     private String companyName;
     @Column(name = "company_Introduce", columnDefinition = "NVARCHAR(MAX)", nullable = true)
@@ -39,4 +31,17 @@ public class CompanyEntity {
     private String companySize;
     @Column(name = "company_Logo",nullable = true)
     private String companyLogo;
+
+
+
+    @JsonBackReference
+    @OneToOne
+    @JoinColumn(name = "user_Id", nullable = true) // Tạo cột khóa ngoại user_id trong bảng Company
+    private UserEntity user;
+
+    @ManyToOne
+    @JoinColumn(name = "message_id",nullable = true) // tên cột khóa ngoại
+    private MessageEntity message; // trường này phải tồn tại
+
+
 }

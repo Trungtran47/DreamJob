@@ -22,6 +22,6 @@ public class UserDTO {
     private String desiredJob; // Sử dụng underscore để nối từ
     private Long roles;
     private String avatar;
-    private List<PostDTO> posts; // Danh sách bài viết liên quan đến người dùng
-    private CompanyDTO company; // Thông tin công ty liên quan (nếu cần)
+//    private List<PostDTO> posts; // Danh sách bài viết liên quan đến người dùng
+//    private CompanyDTO company; // Thông tin công ty liên quan (nếu cần)
 }

@@ -11,7 +11,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {UserMapper.class, CompanyMapper.class})
 public interface PostMapper {
-    PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);
+//    PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);
     PostDTO toDTO(PostEntity postEntity);
     PostWithCompanyDTO toWithCompanyDTO(PostEntity postEntity);
     List<PostWithCompanyDTO> toWithCompanyDTOs(List<PostEntity> postEntities);
