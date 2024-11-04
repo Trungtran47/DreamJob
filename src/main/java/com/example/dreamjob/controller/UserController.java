@@ -1,6 +1,7 @@
 package com.example.dreamjob.controller;
 
 import com.example.dreamjob.dto.UserDTO;
+import com.example.dreamjob.dto.response.UserCv;
 import com.example.dreamjob.dto.response.UserLogin;
 import com.example.dreamjob.entity.CompanyEntity;
 import com.example.dreamjob.entity.UserEntity;
@@ -40,7 +41,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id) {
         try {
-            UserEntity createdUser =   userService.getUserById(id);
+            UserDTO createdUser =   userService.getUserById(id);
             return ResponseEntity.status(HttpStatus.OK).body(createdUser);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -65,8 +66,8 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PostMapping(value = "/{userId}/update_user", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadAvatar(@PathVariable Long userId,
+    @PostMapping(value = "/{userId}/update_employer", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateEmployer(@PathVariable Long userId,
                                           @RequestParam(value="username") String username,
                                           @RequestParam(value="fullName") String fullName,
                                           @RequestParam(value="phone") int phone,
@@ -80,7 +81,6 @@ public class UserController {
             if (image == null || image.isEmpty()) {
                 userEn.setAvatar("0");
             }
-
             // Cập nhật user với ảnh mới
             userService.updateUser(userId, userEn, image);
             return ResponseEntity.ok().body(userEn);
@@ -88,6 +88,52 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi khi tải ảnh lên: " + e.getMessage());
         }
     }
-
-
+    @PostMapping(value = "/{userId}/update_applicant", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateApplicant(@PathVariable Long userId,
+                                          @RequestParam(value="username") String username,
+                                          @RequestParam(value="fullName") String fullName,
+                                          @RequestParam(value="experience") String experience,
+                                          @RequestParam(value= "desiredJob") String desiredJob,
+                                          @RequestParam(value="location") String location,
+                                          @RequestParam(value="phone") int phone,
+                                          @RequestParam(value="image", required = false) MultipartFile image) {
+        try {
+            UserDTO userEntity = new UserDTO();
+            userEntity.setUsername(username);
+            userEntity.setFullName(fullName);
+            userEntity.setPhone(phone);
+            userEntity.setExperience(experience);
+            userEntity.setDesiredJob(desiredJob);
+            userEntity.setLocation(location);
+            if (image == null || image.isEmpty()) {
+                userEntity.setAvatar("0");
+            }
+            // Cập nhật user với ảnh mới
+            userService.updateApplicant(userId, userEntity, image);
+            return ResponseEntity.ok().body(userEntity);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi khi tải ảnh lên: " + e.getMessage());
+        }
+    }
+    @PostMapping("/update_cv/{userId}/cv")
+    public ResponseEntity<?> uploadCv(@PathVariable Long userId, @RequestParam(value="cv", required = false) MultipartFile cv){
+        try {
+            if (cv == null || cv.isEmpty()) {
+                throw new IllegalArgumentException("CV file is required.");
+            }
+            UserCv userCv = userService.updateCv(userId, cv);
+            return ResponseEntity.ok().body(userCv);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @DeleteMapping("/delete_cv/{userId}/cv")
+    public ResponseEntity<?> deleteCv(@PathVariable Long userId){
+        try {
+            userService.deleteCv(userId);
+            return ResponseEntity.ok().build();
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

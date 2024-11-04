@@ -7,6 +7,6 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface CompanyMapper {
-    CompanyMapper INSTANCE = Mappers.getMapper(CompanyMapper.class);
+//    CompanyMapper INSTANCE = Mappers.getMapper(CompanyMapper.class);
     CompanyDTO toCompanyDto(CompanyEntity companyEntity);
 }
