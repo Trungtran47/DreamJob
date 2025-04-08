@@ -14,7 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@Controller
+@RestController
 @RequestMapping(value="/user")
 public class UserController {
     @Autowired
@@ -82,7 +82,7 @@ public class UserController {
                 userEn.setAvatar("0");
             }
             // Cập nhật user với ảnh mới
-            userService.updateUser(userId, userEn, image);
+            userService.updateEmployer(userId, userEn, image);
             return ResponseEntity.ok().body(userEn);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi khi tải ảnh lên: " + e.getMessage());

@@ -15,7 +15,6 @@ import java.util.List;
 public class UserLogin {
     private Long userId;
     private String username;
-    private String password; // Nếu không cần thiết, có thể bỏ qua trong DTO
     private String email;
     private String fullName;
     private int phone;

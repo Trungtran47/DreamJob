@@ -7,12 +7,14 @@ import com.example.dreamjob.dto.response.UserLogin;
 import com.example.dreamjob.entity.CompanyEntity;
 import com.example.dreamjob.entity.UserEntity;
 import com.example.dreamjob.mapp.PostMapper;
-import com.example.dreamjob.mapp.PostMapperImpl;
+//import com.example.dreamjob.mapp.PostMapperImpl;
 import com.example.dreamjob.mapp.UserMapper;
 import com.example.dreamjob.repository.CompanyRepository;
 import com.example.dreamjob.repository.UserRepository;
 import com.example.dreamjob.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +29,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class UserIplm implements UserService {
     @Autowired
     private UserRepository userRepository;
@@ -35,7 +38,34 @@ public class UserIplm implements UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
+
+
+    @Override
+    public UserLogin LoginAdmin(UserDTO user) {
+        UserEntity existingUser = userRepository.findUserEntitiesByEmail(user.getEmail());
+
+        if (existingUser == null || existingUser.getRoles() != 3) {
+            throw new RuntimeException("Email không tồn tại hoặc không được phép đăng nhập.");
+        }
+        if (!passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
+            throw new RuntimeException("Mật khẩu không đúng");
+        }
+        System.out.println("Đăng nhập thành công");
+
+        return userMapper.UserEntityToUserLogin(existingUser);
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        try {
+            List<UserEntity> users = userRepository.findAll();
+            return userMapper.UsersToUserDTOs(users);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Override
     public UserEntity register(UserEntity user) {
@@ -52,22 +82,17 @@ public class UserIplm implements UserService {
         UserEntity existingUser = userRepository.findUserEntitiesByEmail(user.getEmail());
         if (existingUser == null) {
             throw new RuntimeException("Email không tồn tại.");
-        } else {
-            if (passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
-                System.out.println("Đăng nhập thành công");
-            } else {
-                throw new RuntimeException("Mật khẩu không đúng");
-            }
         }
+        if (!passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
+            throw new RuntimeException("Mật khẩu không đúng");
+        }
+        System.out.println("Đăng nhập thành công");
 
-        // Đảm bảo rằng existingUser không phải là null trước khi ánh xạ
-        UserLogin userLogin = userMapper.UserEntityToUserLogin(existingUser);
-        System.out.println("Thông tin UserLogin: " + userLogin);
-        return userLogin;
+        return userMapper.UserEntityToUserLogin(existingUser);
+
     }
-
     @Override
-    public UserEntity updateUser(Long id, UserEntity user, MultipartFile image) {
+    public UserEntity updateEmployer(Long id, UserEntity user, MultipartFile image) {
         try {
             UserEntity existingUser = userRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("User không tồn tại."));
@@ -187,7 +212,6 @@ public class UserIplm implements UserService {
                         }
                     }
                 }
-
                 // Lưu CV mới
                 String originalFileName = cv.getOriginalFilename();
                 String fileName = userId + "_" + originalFileName; // Tạo tên file duy nhất

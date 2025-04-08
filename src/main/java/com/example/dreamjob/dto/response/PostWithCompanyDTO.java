@@ -40,6 +40,7 @@ public class PostWithCompanyDTO {
     private String companyLocation;
     private String companyWebsite;
     private String companySize;
+    private String companyCategory;
     private String companyLogo;
 
     // Constructor để tạo DTO từ PostEntity
@@ -77,6 +78,7 @@ public class PostWithCompanyDTO {
                 this.companyLocation = company.getCompanyLocation();
                 this.companyWebsite = company.getCompanyWebsite();
                 this.companySize = company.getCompanySize();
+                this.companyCategory = company.getCompanyCategory();
                 this.companyLogo = company.getCompanyLogo();
             }
         }

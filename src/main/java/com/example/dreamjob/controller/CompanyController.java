@@ -1,5 +1,6 @@
 package com.example.dreamjob.controller;
 
+import com.example.dreamjob.dto.CompanyDTO;
 import com.example.dreamjob.entity.CompanyEntity;
 import com.example.dreamjob.entity.UserEntity;
 import com.example.dreamjob.service.CompanyService;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequestMapping(value= "/company")
 public class CompanyController {
     @Autowired
@@ -20,8 +23,8 @@ public class CompanyController {
     @GetMapping("/{userId}")
     public ResponseEntity<?> getCompanyByUserId(@PathVariable Long userId) {
         try {
-            CompanyEntity companyEntity = companyService.getCompanyByUserId(userId);
-            return ResponseEntity.status(HttpStatus.OK).body(companyEntity);
+            CompanyDTO company= companyService.getCompanyByUserId(userId);
+            return ResponseEntity.status(HttpStatus.OK).body(company);
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
@@ -33,6 +36,7 @@ public class CompanyController {
                                          @RequestParam(value = "companyLocation") String companyLocation,
                                          @RequestParam(value = "companyWebsite") String companyWebsite,
                                          @RequestParam(value="companySize") String companySize,
+                                         @RequestParam(value="companyCategory") String companyCategory,
                                          @RequestParam(value="companyLogo", required = false) MultipartFile companyLogo) {
         try {
             if (userId == null ) {
@@ -43,6 +47,7 @@ public class CompanyController {
             companyEntity.setCompanyIntroduce(companyIntroduce);
             companyEntity.setCompanyLocation(companyLocation);
             companyEntity.setCompanyWebsite(companyWebsite);
+            companyEntity.setCompanyCategory(companyCategory);
             companyEntity.setCompanySize(companySize);
             CompanyEntity company =  companyService.addCompany(userId, companyEntity, companyLogo);
             return ResponseEntity.status(HttpStatus.CREATED).body(company);
@@ -57,6 +62,7 @@ public class CompanyController {
                                          @RequestParam(value = "companyIntroduce") String companyIntroduce,
                                          @RequestParam(value = "companyLocation") String companyLocation,
                                          @RequestParam(value = "companyWebsite") String companyWebsite,
+                                           @RequestParam(value="companyCategory") String companyCategory,
                                          @RequestParam(value="companySize") String companySize,
                                          @RequestParam(value="companyLogo", required = false) MultipartFile companyLogo) {
         try {
@@ -68,6 +74,7 @@ public class CompanyController {
             companyEntity.setCompanyName(companyName);
             companyEntity.setCompanyIntroduce(companyIntroduce);
             companyEntity.setCompanyLocation(companyLocation);
+            companyEntity.setCompanyCategory(companyCategory);
             companyEntity.setCompanyWebsite(companyWebsite);
             companyEntity.setCompanySize(companySize);
 
@@ -75,6 +82,15 @@ public class CompanyController {
             return ResponseEntity.status(HttpStatus.CREATED).body(company);
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    @GetMapping("/all")
+    public ResponseEntity<List<?>> getAllCompany() {
+        try {
+            List<CompanyDTO> companyEntities = companyService.getAllCompanies();
+            return ResponseEntity.status(HttpStatus.OK).body(companyEntities);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

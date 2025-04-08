@@ -2,10 +2,7 @@ package com.example.dreamjob.dto;
 
 import com.example.dreamjob.entity.UserEntity;
 import com.example.dreamjob.entity.CompanyEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class PostDTO {
     private Long postId;
     private String title;

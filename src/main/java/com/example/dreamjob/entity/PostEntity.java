@@ -1,11 +1,16 @@
 package com.example.dreamjob.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -47,17 +52,19 @@ public class PostEntity {
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate; // Ngày hết hạn bài viết
 
-    @ManyToOne
-    @JoinColumn(name = "message_id",nullable = true) // tên cột khóa ngoại
-    private MessageEntity message; // trường này phải tồn tại
+//    @JsonBackReference("message_post")
+//    @OneToOne
+//    @JoinColumn(name = "message_Id", nullable = true) // Tạo cột khóa ngoại user_id trong bảng Company
+//    private MessageEntity message; // trường này phải tồn tại
 
-
-
-    @ManyToOne
+    @JsonBackReference("user_post")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_Id", nullable = true)
-    @JsonBackReference
     private UserEntity user;
 
+    @JsonManagedReference("saved_post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SavedJobEntity> saved = new ArrayList<>();
 //    @JsonBackReference
 //    @ManyToOne
 //    @JoinColumn(name="company_Id", nullable = false)

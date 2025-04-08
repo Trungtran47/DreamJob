@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PostService {
     PostDTO createPost(PostEntity post);
-    List<PostEntity> getPosts();
+    List<PostWithCompanyDTO> getAllPosts();
     PostEntity getPost(Long id);
     void deletePost(Long id);
     PostDTO updatePost(Long id,PostEntity post);

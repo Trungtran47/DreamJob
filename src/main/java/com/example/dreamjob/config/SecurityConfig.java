@@ -48,12 +48,24 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Bật CORS với cấu hình
                 .csrf(csrf -> csrf.disable()) // Vô hiệu hóa CSRF
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/DreamJob/**").permitAll() // Cho phép tất cả các yêu cầu đến endpoint /api/users/**
-                        .anyRequest().permitAll() // Yêu cầu xác thực cho các yêu cầu còn lại
+                        .requestMatchers("/DreamJob/**").permitAll() // Cho phép tất cả với đường dẫn này
+//                        .requestMatchers("/DreamJob/Admin/**").hasRole("ADMIN") // Chỉ người dùng có vai trò ADMIN mới được phép
+                        .anyRequest().permitAll() // Các yêu cầu còn lại phải được xác thực
+                )
+                .formLogin(login -> login
+                        .loginPage("/admin/login") // Trang login tùy chỉnh
+                        .defaultSuccessUrl("/DreamJob/Admin/dashboard", true) // Chuyển hướng sau khi login thành công
+                        .permitAll() // Cho phép mọi người truy cập trang login
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/admin/logout") // URL xử lý logout
+                        .logoutSuccessUrl("/DreamJob") // Chuyển hướng sau khi logout
+                        .permitAll() // Cho phép mọi người truy cập logout
                 );
 
         return http.build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

@@ -66,10 +66,8 @@ public ResponseEntity<?> getPostById(@PathVariable Long postId) {
     public ResponseEntity<List<?>> getAllPostsByUserId(@PathVariable Long userId) {
         try {
             List<PostWithCompanyDTO> posts = postService.getPostsByUserId(userId);
-
             return ResponseEntity.status(HttpStatus.OK).body(posts);
         }catch (Exception e) {
-            e.printStackTrace(); // Hoặc ghi log vào hệ thống log của bạn
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
@@ -82,6 +80,15 @@ public ResponseEntity<?> getPostById(@PathVariable Long postId) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
+    }
+    @GetMapping("/applicant/post/all")
+    public ResponseEntity<List<?>> getAllPosts() {
+        try {
+            List<PostWithCompanyDTO> posts = postService.getAllPosts();
+            return ResponseEntity.status(HttpStatus.OK).body(posts);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
 }

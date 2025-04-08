@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
+@Getter
+@Setter
 @Table(name= "app_user")
 public class UserEntity {
     @Id
@@ -46,17 +46,30 @@ public class UserEntity {
     @Column(name="avatar", nullable = true)
     String avatar;
 
-    @ManyToOne
-    @JoinColumn(name = "message_id",nullable = true) // tên cột khóa ngoại
-    private MessageEntity message; // trường này phải tồn tại
-
-    @JsonManagedReference
+//    @JsonBackReference
+//    @OneToOne
+//    @JoinColumn(name = "message_Id", nullable = true)
+//    private MessageEntity employer; // Trường này ánh xạ tới message_Id
+//
+//    @JsonBackReference
+//    @OneToOne
+//    @JoinColumn(name = "message_Id", nullable = true)
+//    private MessageEntity applicant; // Trường này ánh xạ tới message_Id
+    @JsonManagedReference("user_post")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<PostEntity> post = new ArrayList<>();
 
-    @JsonManagedReference
+    @JsonManagedReference("user_company")
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private CompanyEntity company;
 
+    @JsonManagedReference("user_blog")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BlogEntity> blog;
+
+
+    @JsonManagedReference("user_message")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MessageEntity> message;
 
 }

@@ -5,11 +5,12 @@ import com.example.dreamjob.dto.response.UserCv;
 import com.example.dreamjob.dto.response.UserLogin;
 import com.example.dreamjob.entity.UserEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Named;
 import org.mapstruct.NullValueMappingStrategy;
 
 import java.util.List;
-
-@Mapper(componentModel = "spring", nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
+//,nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT
+@Mapper(componentModel = "spring",nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
 public interface UserMapper {
     UserDTO UserToUserDTO(UserEntity user);
     UserLogin UserEntityToUserLogin(UserEntity user);

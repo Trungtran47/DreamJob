@@ -29,19 +29,35 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310' // Thêm phụ thuộc này
-    implementation 'org.mapstruct:mapstruct:1.5.2.Final' // Thêm MapStruct
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final' // Để xử lý chú thích
-    implementation 'org.modelmapper:modelmapper:2.4.4' // Thêm ModelMapper
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    // MapStruct dependencies
+    implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
+
+    // Lombok
     compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // Optional: ModelMapper, nếu bạn cũng dùng nó để ánh xạ
+    implementation 'org.modelmapper:modelmapper:2.4.4'
+
+    runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
 
+}
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// Cấu hình để MapStruct bỏ qua các thông tin timestamp và phiên bản trong các lớp tự động tạo ra
+tasks.named('compileJava') {
+    options.compilerArgs += [
+            '-Amapstruct.suppressGeneratorTimestamp=true',
+            '-Amapstruct.suppressGeneratorVersionInfoComment=true',
+            '-Amapstruct.verbose=true'
+    ]
 }
