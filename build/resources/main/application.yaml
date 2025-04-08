@@ -1,0 +1,23 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /DreamJob
+
+spring:
+  datasource:
+    url: "jdbc:sqlserver://localhost:1433;databaseName=DREAMJOB;encrypt=true;trustServerCertificate=true;useUnicode=true;characterEncoding=UTF-8"
+    username: sa
+    password: 472003
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+  app:
+    upload:
+      avatar-directory: uploads/
